@@ -24,7 +24,7 @@ def getPersonalData(request):
 def createPersonalData(request):
     user = request.user
     if PersonalData.objects.filter(user=user).exists():
-        return Response({'msg': "Personal Date already entered. Please use update for change"})
+        return Response({'msg': "Personal Data already entered. Please use update for change"})
     else:
         serializer = PersonalDataSerializers(data=request.data)
         user_instance = User.objects.get(id=user.id)
