@@ -1,5 +1,6 @@
 from django.http import JsonResponse
-from rest_framework.response import Response as Response_provider
+
+from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 
 from rest_framework_simplejwt.tokens import RefreshToken, AccessToken, UntypedToken
@@ -14,7 +15,6 @@ from django.contrib.auth.models import User
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.hashers import make_password
 from rest_framework.utils import json
-from requests import *
 
 
 # class MyTokenObtainPairSerializer (TokenObtainPairSerializer):
@@ -83,6 +83,7 @@ from requests import *
 @permission_classes([])
 def tokenObtainPair(request):
     try:
+
         login_serializer = LoginSerializer(data=request.data)
 
         if login_serializer.is_valid():
@@ -105,7 +106,7 @@ def tokenObtainPair(request):
                 #     'user_object': UserInfoSerializer(user_instance).data,
                 #
                 # })
-                return Response_provider({
+                return Response({
 
                     'access_token': str(refresh.access_token),
                     'refresh_token': str(refresh),
@@ -116,7 +117,7 @@ def tokenObtainPair(request):
 
                 })
             else:
-                return Response_provider({
+                return Response({
                     "code": status.HTTP_401_UNAUTHORIZED,
                     "message": "No active account found with the given credentials",
                     "status_code": 401,
@@ -128,9 +129,9 @@ def tokenObtainPair(request):
                     ]
                 })
         else:
-            return Response_provider(login_serializer.errors)
+            return Response(login_serializer.errors)
     except Exception as e:
-        return Response_provider({
+        return Response({
             "code": status.HTTP_401_UNAUTHORIZED,
             "message": str(e),
             "status_code": 401,
@@ -149,7 +150,7 @@ def tokenRefresh(request):
 
         refresh = RefreshToken(token=request.data.get('refresh_token'), verify=True)
 
-        return Response_provider({
+        return Response({
             'access_token': str(refresh.access_token),
             'refresh_token': str(refresh),
             'token_type': str(refresh.payload['token_type']),
@@ -159,7 +160,7 @@ def tokenRefresh(request):
 
         })
     except Exception as e:
-        return Response_provider({
+        return Response({
             "code": status.HTTP_401_UNAUTHORIZED,
             "message": str(e),
             "status_code": 401,
@@ -178,14 +179,14 @@ def tokenVerify(request, self):
 
         verify = UntypedToken(token=request.data.get('access_token'))
 
-        return Response_provider({
+        return Response({
             'access_token': str(verify.token),
             'token_type': str(verify.payload['token_type']),
             'expiry': verify.payload['exp'],
             'user_id': verify.payload['user_id'],
         })
     except Exception as e:
-        return Response_provider({
+        return Response({
             "code": status.HTTP_401_UNAUTHORIZED,
             "message": str(e),
             "status_code": 401,
@@ -198,6 +199,13 @@ def tokenVerify(request, self):
         })
 
 
+@api_view(['POST'])
+def test_view(request):
+    return Response({
+        "hello": 'hello'
+    }, 200)
+
+
 # Create your views here.
 @api_view(['POST'])
 def registration_view(request):
@@ -206,21 +214,22 @@ def registration_view(request):
         serializer = RegistrationSerializers(data=request.data)
 
         account_data = {
+            'gender': request.data['gender'],
+            'phone_no': request.data['phone_no']
         }
-        account_data['gender'] = request.data['gender']
-        account_data['phone_no'] = request.data['phone_no']
+
         serializer2 = AccountSerializer(data=account_data)
-        data = {}
+
         if serializer.is_valid() and serializer2.is_valid():
 
             user = serializer.save()
             account = serializer2.save(user=user)
-            data['response'] = "successfully registered user"
-            data['email'] = user.email
-            data['username'] = user.username
-            data['gender'] = account.gender
-            data['phone_no'] = account.phone_no
+            return Response({
+                'response': "successfully registered user",
+                'email': user.email,
+                'username': user.username,
+                'gender': account.gender,
+                'phone_no': account.phone_no
+            })
         else:
-            data = serializer.errors
-
-        return Response_provider(data)
+            return Response(serializer.errors)
