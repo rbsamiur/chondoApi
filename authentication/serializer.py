@@ -25,7 +25,7 @@ class LoginSerializer(ModelSerializer):
 class UserInfoSerializer( ModelSerializer):
     class Meta:
         model = User
-        fields = ('id', 'first_name', 'last_name', 'email')
+        fields = ('id', 'first_name', 'last_name', 'email', 'last_login')
 
 
 class RegistrationSerializers(ModelSerializer):
