@@ -5,7 +5,7 @@ from rest_framework.decorators import api_view, permission_classes
 
 from rest_framework_simplejwt.tokens import RefreshToken, AccessToken, UntypedToken
 from rest_framework import status
-
+import datetime
 from django.contrib.auth.hashers import check_password
 from .serializer import RegistrationSerializers
 from .serializer import LoginSerializer
@@ -105,7 +105,9 @@ def tokenObtainPair(request):
                 #     'user_id': refresh.payload['user_id'],
                 #     'user_object': UserInfoSerializer(user_instance).data,
                 #
-                # })
+                #
+                user_instance.last_login = datetime.datetime.now()
+                user_instance.save()
                 return Response({
 
                     'access_token': str(refresh.access_token),

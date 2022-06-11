@@ -25,7 +25,7 @@ def getPersonalData(request):
 def createPersonalData(request):
     user = request.user
     if PersonalData.objects.filter(user=user).exists():
-        return Response("Personal Date already entered. Please use update for change")
+        return Response({'msg':"Personal Date already entered. Please use update for change"})
     else:
         serializer = PersonalDataSerializers(data=request.data)
         if serializer.is_valid():
@@ -51,4 +51,4 @@ def deletePersonalData(request):
     user = request.user
     stored_data = PersonalData.objects.get(user=user)
     stored_data.delete()
-    return Response("Item Deleted Successfully!")
+    return Response({'msg':"Item Deleted Successfully!"})
