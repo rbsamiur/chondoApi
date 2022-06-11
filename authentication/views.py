@@ -130,7 +130,16 @@ def tokenObtainPair(request):
                     ]
                 })
         else:
-            return Response(login_serializer.errors)
+            return Response({
+                "code": status.HTTP_401_UNAUTHORIZED,
+                "message": "No active account found with the given credentials",
+                "status_code": 401,
+                "errors": [
+                    {
+                        "status_code": 401,
+                        "message": "Either Email or Password or both not given"
+                    }
+                ]})
     except Exception as e:
         return Response({
             "code": status.HTTP_401_UNAUTHORIZED,
