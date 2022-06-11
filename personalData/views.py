@@ -16,6 +16,8 @@ def getPersonalData(request):
     serializer= PersonalDataSerializers(stored_data,many=True)
     return Response(serializer.data)
 
+# todo: need to find if a data exist of not
+
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def createPersonalData(request):

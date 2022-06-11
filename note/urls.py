@@ -6,4 +6,5 @@ urlpatterns=[
     path('note/create/',  views.createNote),
     path('note/update/<str:pk>', views.updateNote),
     path('note/delete/<str:pk>', views.deleteNote),
+    path('notes/date', views.getNotesbyDate),
 ]

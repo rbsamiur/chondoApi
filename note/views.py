@@ -8,13 +8,26 @@ from rest_framework import generics
 from .models import Note
 from .serializer import NoteSerializers
 
+
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def getNotes(request):
-    user=request.user
-    stored_data=user.note_set.all()
-    serializer= NoteSerializers(stored_data,many=True)
+    user = request.user
+    stored_data = user.note_set.all()
+    serializer = NoteSerializers(stored_data, many=True)
     return Response(serializer.data)
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def getNotesbyDate(request):
+    user = request.user
+    print(request.data['date'])
+    date=request.data['date']
+    stored_data = user.note_set.filter(updated_on=date)
+    serializer = NoteSerializers(stored_data, many=True)
+    return Response(serializer.data)
+
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -25,18 +38,20 @@ def createNote(request):
         serializer.save(user=user)
     return Response(serializer.data)
 
+
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
-def updateNote(request,pk):
+def updateNote(request, pk):
     stored_data = Note.objects.get(id=pk)
     serializer = NoteSerializers(instance=stored_data, data=request.data)
     if serializer.is_valid():
         serializer.save()
     return Response(serializer.data)
 
+
 @api_view(['DELETE'])
 @permission_classes([IsAuthenticated])
-def deleteNote(request,pk):
+def deleteNote(request, pk):
     stored_data = Note.objects.get(id=pk)
     stored_data.delete()
     return Response("Item Deleted Successfully!")
