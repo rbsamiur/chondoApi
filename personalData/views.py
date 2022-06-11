@@ -7,6 +7,7 @@ from rest_framework import generics
 # Create your views here.
 from .models import PersonalData
 from .serializer import PersonalDataSerializers
+import datetime
 
 
 @api_view(['GET'])
@@ -18,16 +19,17 @@ def getPersonalData(request):
     return Response(serializer.data)
 
 
-
-
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def createPersonalData(request):
     user = request.user
     if PersonalData.objects.filter(user=user).exists():
-        return Response({'msg':"Personal Date already entered. Please use update for change"})
+        return Response({'msg': "Personal Date already entered. Please use update for change"})
     else:
         serializer = PersonalDataSerializers(data=request.data)
+        user_instance = User.objects.get(id=user.id)
+        user_instance.last_login = datetime.datetime.now()
+        user_instance.save()
         if serializer.is_valid():
             serializer.save(user=user)
         return Response(serializer.data)
@@ -51,4 +53,4 @@ def deletePersonalData(request):
     user = request.user
     stored_data = PersonalData.objects.get(user=user)
     stored_data.delete()
-    return Response({'msg':"Item Deleted Successfully!"})
+    return Response({'msg': "Item Deleted Successfully!"})

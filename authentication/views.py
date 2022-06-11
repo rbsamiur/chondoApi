@@ -106,8 +106,7 @@ def tokenObtainPair(request):
                 #     'user_object': UserInfoSerializer(user_instance).data,
                 #
                 #
-                user_instance.last_login = datetime.datetime.now()
-                user_instance.save()
+
                 return Response({
 
                     'access_token': str(refresh.access_token),
