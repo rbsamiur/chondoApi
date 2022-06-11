@@ -88,7 +88,7 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:8080",
     "http://127.0.0.1:9000",
 ]
-ROOT_URLCONF = 'Chondo.urls'
+ROOT_URLCONF = 'chondo.urls'
 
 TEMPLATES = [
     {
@@ -107,7 +107,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'Chondo.wsgi.application'
+WSGI_APPLICATION = 'chondo.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
