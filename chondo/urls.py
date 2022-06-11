@@ -25,4 +25,4 @@ urlpatterns = [
                   path('api/', include('notification.urls')),
                   path('api/', include('note.urls')),
                   path('api/', include('symptoms.urls')),
-              ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+              ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
