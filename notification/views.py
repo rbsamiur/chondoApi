@@ -8,20 +8,20 @@ from rest_framework import generics
 from .models import Notification
 from .serializer import NotificationSerializers
 from authentication.decorator import permission_required
-@api_view(['GET'])
 
+
+@api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def getNotifications(request):
-    notifications=Notification.objects.all()
-    serializer= NotificationSerializers(notifications,many=True)
+    notifications = Notification.objects.all()
+    serializer = NotificationSerializers(notifications, many=True)
     return Response(serializer.data)
+
 
 @api_view(['POST'])
 @permission_required('add_notification')
 @permission_classes([IsAuthenticated])
 def createNotification(request):
-    print(request.data)
-
     serializer = NotificationSerializers(data=request.data)
     print(serializer.is_valid())
     if serializer.is_valid():
@@ -29,20 +29,22 @@ def createNotification(request):
         serializer.save()
     return Response(serializer.data)
 
+
 @api_view(['POST'])
 @permission_required('change_notification')
 @permission_classes([IsAuthenticated])
-def updateNotification(request,pk):
+def updateNotification(request, pk):
     notification = Notification.objects.get(id=pk)
     serializer = NotificationSerializers(instance=notification, data=request.data)
     if serializer.is_valid():
         serializer.save()
     return Response(serializer.data)
 
+
 @api_view(['DELETE'])
 @permission_required('delete_notification')
 @permission_classes([IsAuthenticated])
-def deleteNotification(request,pk):
+def deleteNotification(request, pk):
     notification = Notification.objects.get(id=pk)
     notification.delete()
     return Response("Item Deleted Successfully!")

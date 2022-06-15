@@ -13,8 +13,8 @@ from .serializer import NoteSerializers
 @permission_classes([IsAuthenticated])
 def getNotes(request):
     user = request.user
-    stored_data = user.note_set.all()
-    serializer = NoteSerializers(stored_data, many=True)
+    note_data = user.note_set.all()
+    serializer = NoteSerializers(note_data, many=True)
     return Response(serializer.data)
 
 
@@ -24,8 +24,8 @@ def getNotesbyDate(request):
     user = request.user
     print(request.data['date'])
     date=request.data['date']
-    stored_data = user.note_set.filter(updated_on=date)
-    serializer = NoteSerializers(stored_data, many=True)
+    note_data = user.note_set.filter(updated_on=date)
+    serializer = NoteSerializers(note_data, many=True)
     return Response(serializer.data)
 
 
@@ -42,8 +42,8 @@ def createNote(request):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def updateNote(request, pk):
-    stored_data = Note.objects.get(id=pk)
-    serializer = NoteSerializers(instance=stored_data, data=request.data)
+    note_data = Note.objects.get(id=pk)
+    serializer = NoteSerializers(instance=note_data, data=request.data)
     if serializer.is_valid():
         serializer.save()
     return Response(serializer.data)
@@ -52,6 +52,6 @@ def updateNote(request, pk):
 @api_view(['DELETE'])
 @permission_classes([IsAuthenticated])
 def deleteNote(request, pk):
-    stored_data = Note.objects.get(id=pk)
-    stored_data.delete()
+    note_data = Note.objects.get(id=pk)
+    note_data.delete()
     return Response("Item Deleted Successfully!")

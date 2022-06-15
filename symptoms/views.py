@@ -8,13 +8,15 @@ from rest_framework import generics
 from .models import Symptomps
 from .serializer import SymptompsSerializers
 
+
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def getSymptoms(request):
-    user=request.user
-    stored_data=user.symptomps_set.all()
-    serializer= SymptompsSerializers(stored_data,many=True)
+    user = request.user
+    symptom_data = user.symptomps_set.all()
+    serializer = SymptompsSerializers(symptom_data, many=True)
     return Response(serializer.data)
+
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -25,18 +27,20 @@ def createSymtom(request):
         serializer.save(user=user)
     return Response(serializer.data)
 
+
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
-def updateSymptom(request,pk):
-    stored_data = Symptomps.objects.get(id=pk)
-    serializer = SymptompsSerializers(instance=stored_data, data=request.data)
+def updateSymptom(request, pk):
+    symptom_data = Symptomps.objects.get(id=pk)
+    serializer = SymptompsSerializers(instance=symptom_data, data=request.data)
     if serializer.is_valid():
         serializer.save()
     return Response(serializer.data)
 
+
 @api_view(['DELETE'])
 @permission_classes([IsAuthenticated])
-def deleteSymptom(request,pk):
-    stored_data = Symptomps.objects.get(id=pk)
-    stored_data.delete()
+def deleteSymptom(request, pk):
+    symptom_data = Symptomps.objects.get(id=pk)
+    symptom_data.delete()
     return Response("Item Deleted Successfully!")

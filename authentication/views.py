@@ -17,19 +17,6 @@ from django.contrib.auth.hashers import make_password
 from rest_framework.utils import json
 
 
-# class MyTokenObtainPairSerializer (TokenObtainPairSerializer):
-#     @classmethod
-#     def get_token(cls, user):
-#         token = super().get_token(user)
-#
-#         # Add custom claims
-#         token['username'] = user.username
-#         # ...
-#
-#         return token
-#
-# class MyTokenObtainPairView (TokenObtainPairView):
-#     serializer_class = MyTokenObtainPairSerializer
 
 # @api_view(['POST'])
 # def GoogleView(request):
@@ -46,15 +33,14 @@ from rest_framework.utils import json
 #         user = User.objects.get(email=data['email'])
 #     except User.DoesNotExist:
 #         user = User()
-#         user.username = data['email']
+#         user.emai; = data['email']
 #         # provider random default password
 #         user.password = make_password(BaseUserManager().make_random_password())
-#         user.email = data['email']
 #         user.save()
 #
 #     token = RefreshToken.for_user(user)  # generate token without username & password
 #     response = {}
-#     response['username'] = user.username
+#     response['email'] = user.username
 #     response['access_token'] = str(token.access_token)
 #     response['refresh_token'] = str(token)
 #     return Response(response)

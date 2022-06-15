@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'notification',
     'note',
     'symptoms',
+    'mood',
     'rest_framework_simplejwt.token_blacklist',
     "corsheaders",
 ]
