@@ -6,5 +6,5 @@ urlpatterns=[
     path('symptom/create/',  views.createSymtom),
     path('symptom/update/<str:pk>', views.updateSymptom),
     path('symptom/delete/<str:pk>', views.deleteSymptom),
-    path('symptom/delete/<str:pk>', views.deleteSymptom),
+    path('symptoms/date', views.getSymptomsbyDate),
 ]

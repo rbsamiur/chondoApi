@@ -21,6 +21,17 @@ def getPersonalData(request):
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
+def getPersonalDatabyDate(request):
+    user = request.user
+    print(request.data['date'])
+    date = request.data['date']
+    stored_data = user.personaldata_set.filter(updated_on=date)
+    serializer = PersonalDataSerializers(stored_data, many=True)
+    return Response(serializer.data)
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def createPersonalData(request):
     user = request.user
     if PersonalData.objects.filter(user=user).exists():

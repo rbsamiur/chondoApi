@@ -20,6 +20,17 @@ def getSymptoms(request):
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
+def getSymptomsbyDate(request):
+    user = request.user
+    print(request.data['date'])
+    date = request.data['date']
+    symptom_data = user.symptomps_set.filter(updated_on=date)
+    serializer = SymptompsSerializers(symptom_data, many=True)
+    return Response(serializer.data)
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def createSymtom(request):
     user = request.user
     serializer = SymptompsSerializers(data=request.data)
