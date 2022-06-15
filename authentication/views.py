@@ -170,7 +170,7 @@ def tokenRefresh(request):
 
 
 @api_view(['POST'])
-def tokenVerify(request, self):
+def tokenVerify(request):
     try:
 
         verify = UntypedToken(token=request.data.get('access_token'))
