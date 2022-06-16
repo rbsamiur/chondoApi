@@ -23,8 +23,11 @@ def getMoods(request):
 def getMoodsByDate(request):
     user = request.user
     date = request.data['date']
+    print(date)
     mood_data = user.mood_set.filter(updated_on=date)
+    print(mood_data)
     serializer = MoodSerializers(mood_data, many=True)
+    print (serializer)
     return Response(serializer.data)
 
 
@@ -32,6 +35,7 @@ def getMoodsByDate(request):
 @permission_classes([IsAuthenticated])
 def createMood(request):
     user = request.user
+    print(request.data)
     serializer = MoodSerializers(data=request.data)
     if serializer.is_valid():
         serializer.save(user=user)

@@ -5,16 +5,16 @@ from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth.models import User
 from rest_framework import generics
 # Create your views here.
-from .models import Symptomps
-from .serializer import SymptompsSerializers
+from .models import Symptoms
+from .serializer import SymptomsSerializers
 
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def getSymptoms(request):
     user = request.user
-    symptom_data = user.symptomps_set.all()
-    serializer = SymptompsSerializers(symptom_data, many=True)
+    symptom_data = user.symptoms_set.all()
+    serializer = SymptomsSerializers(symptom_data, many=True)
     return Response(serializer.data)
 
 
@@ -24,8 +24,8 @@ def getSymptomsbyDate(request):
     user = request.user
     print(request.data['date'])
     date = request.data['date']
-    symptom_data = user.symptomps_set.filter(updated_on=date)
-    serializer = SymptompsSerializers(symptom_data, many=True)
+    symptom_data = user.symptoms_set.filter(updated_on=date)
+    serializer = SymptomsSerializers(symptom_data, many=True)
     return Response(serializer.data)
 
 
@@ -33,7 +33,7 @@ def getSymptomsbyDate(request):
 @permission_classes([IsAuthenticated])
 def createSymtom(request):
     user = request.user
-    serializer = SymptompsSerializers(data=request.data)
+    serializer = SymptomsSerializers(data=request.data)
     if serializer.is_valid():
         serializer.save(user=user)
     return Response(serializer.data)
@@ -42,8 +42,8 @@ def createSymtom(request):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def updateSymptom(request, pk):
-    symptom_data = Symptomps.objects.get(id=pk)
-    serializer = SymptompsSerializers(instance=symptom_data, data=request.data)
+    symptom_data = Symptoms.objects.get(id=pk)
+    serializer = SymptomsSerializers(instance=symptom_data, data=request.data)
     if serializer.is_valid():
         serializer.save()
     return Response(serializer.data)
@@ -52,6 +52,6 @@ def updateSymptom(request, pk):
 @api_view(['DELETE'])
 @permission_classes([IsAuthenticated])
 def deleteSymptom(request, pk):
-    symptom_data = Symptomps.objects.get(id=pk)
+    symptom_data = Symptoms.objects.get(id=pk)
     symptom_data.delete()
     return Response("Item Deleted Successfully!")

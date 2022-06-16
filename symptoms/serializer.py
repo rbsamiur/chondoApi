@@ -1,11 +1,11 @@
 from rest_framework.serializers import ModelSerializer
 from django.contrib.auth.models import User
 
-from .models import Symptomps
+from .models import Symptoms
 
 
-class SymptompsSerializers(ModelSerializer):
+class SymptomsSerializers(ModelSerializer):
     class Meta:
-        model=Symptomps
+        model=Symptoms
         fields='__all__'
 
