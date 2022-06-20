@@ -18,6 +18,7 @@ from rest_framework.utils import json
 
 import requests as httpRequest
 
+
 @api_view(['POST'])
 def GoogleView(request):
     payload = {'access_token': request.data.get("token")}  # validate the token
@@ -29,21 +30,25 @@ def GoogleView(request):
         return Response(content)
 
     # create user if not exist
+    response = {}
     try:
         user = User.objects.get(email=data['email'])
+        response['new_user'] = False
     except User.DoesNotExist:
         user = User()
         user.email = data['email']
         # provider random default password
         user.password = make_password(BaseUserManager().make_random_password())
         user.save()
+        response['new_user'] = True
 
     token = RefreshToken.for_user(user)  # generate token without username & password
-    response = {}
+
     response['email'] = user.email
     response['access_token'] = str(token.access_token)
     response['refresh_token'] = str(token)
     return Response(response)
+
 
 # @api_view(['POST'])
 # def GoogleSocialAuthView( request):
