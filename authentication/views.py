@@ -40,7 +40,7 @@ def GoogleView(request):
 
     token = RefreshToken.for_user(user)  # generate token without username & password
     response = {}
-    response['email'] = user.username
+    response['email'] = user.email
     response['access_token'] = str(token.access_token)
     response['refresh_token'] = str(token)
     return Response(response)
