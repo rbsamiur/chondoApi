@@ -18,32 +18,32 @@ from rest_framework.utils import json
 
 
 
-# @api_view(['POST'])
-# def GoogleView(request):
-#     payload = {'access_token': request.data.get("token")}  # validate the token
-#     r = request.get('https://www.googleapis.com/oauth2/v2/userinfo', params=payload)
-#     data = json.loads(r.text)
-#
-#     if 'error' in data:
-#         content = {'message': 'wrong google token / this google token is already expired.'}
-#         return Response(content)
-#
-#     # create user if not exist
-#     try:
-#         user = User.objects.get(email=data['email'])
-#     except User.DoesNotExist:
-#         user = User()
-#         user.emai; = data['email']
-#         # provider random default password
-#         user.password = make_password(BaseUserManager().make_random_password())
-#         user.save()
-#
-#     token = RefreshToken.for_user(user)  # generate token without username & password
-#     response = {}
-#     response['email'] = user.username
-#     response['access_token'] = str(token.access_token)
-#     response['refresh_token'] = str(token)
-#     return Response(response)
+@api_view(['POST'])
+def GoogleView(request):
+    payload = {'access_token': request.data.get("token")}  # validate the token
+    r = request.get('https://www.googleapis.com/oauth2/v2/userinfo', params=payload)
+    data = json.loads(r.text)
+
+    if 'error' in data:
+        content = {'message': 'wrong google token / this google token is already expired.'}
+        return Response(content)
+
+    # create user if not exist
+    try:
+        user = User.objects.get(email=data['email'])
+    except User.DoesNotExist:
+        user = User()
+        user.email = data['email']
+        # provider random default password
+        user.password = make_password(BaseUserManager().make_random_password())
+        user.save()
+
+    token = RefreshToken.for_user(user)  # generate token without username & password
+    response = {}
+    response['email'] = user.username
+    response['access_token'] = str(token.access_token)
+    response['refresh_token'] = str(token)
+    return Response(response)
 
 # @api_view(['POST'])
 # def GoogleSocialAuthView( request):
