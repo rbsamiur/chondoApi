@@ -16,12 +16,12 @@ from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.hashers import make_password
 from rest_framework.utils import json
 
-
+import requests as httpRequest
 
 @api_view(['POST'])
 def GoogleView(request):
     payload = {'access_token': request.data.get("token")}  # validate the token
-    r = request.get('https://www.googleapis.com/oauth2/v2/userinfo', params=payload)
+    r = httpRequest.get('https://www.googleapis.com/oauth2/v2/userinfo', params=payload)
     data = json.loads(r.text)
 
     if 'error' in data:
