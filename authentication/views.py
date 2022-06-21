@@ -2,7 +2,7 @@ from django.http import JsonResponse
 
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
-
+from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken, AccessToken, UntypedToken
 from rest_framework import status
 import datetime
@@ -11,6 +11,7 @@ from .serializer import RegistrationSerializers
 from .serializer import LoginSerializer
 from .serializer import AccountSerializer
 from .serializer import UserInfoSerializer
+from .serializer import GoogleUserUpdateSerializers
 from django.contrib.auth.models import User
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.hashers import make_password
@@ -52,24 +53,37 @@ def GoogleView(request):
     return Response(response)
 
 
-# @api_view(['POST'])
-# def GoogleSocialAuthView( request):
-#
-#     serializer_class = GoogleSocialAuthSerializer
-#     serializer = self.serializer_class(data=request.data)
-#     serializer.is_valid(raise_exception=True)
-#     data = ((serializer.validated_data)['auth_token'])
-#     return Response(data, status=status.HTTP_200_OK)
-#
-# @api_view(['POST'])
-# def FacebookSocialAuthView(request):
-#
-#     serializer_class = FacebookSocialAuthSerializer
-#
-#     serializer = self.serializer_class(data=request.data)
-#     serializer.is_valid(raise_exception=True)
-#     data = ((serializer.validated_data)['auth_token'])
-#     return Response(data, status=status.HTTP_200_OK)
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def GoogleUserUpdateView(request):
+    if request.method == 'POST':
+        user = request.user
+        user_instance = User.objects.filter(user)
+
+        serializer = GoogleUserUpdateSerializers(data=request.data)
+
+        account_data = {
+            'gender': request.data['gender'],
+            'phone_no': request.data['phone_no']
+        }
+
+        serializer2 = AccountSerializer(data=account_data)
+
+        if serializer.is_valid() and serializer2.is_valid():
+            user_instance["username"] = serializer["username"]
+            user_instance["first_name"] = serializer["first_name"]
+            user_instance["last_name"] = serializer["last_name"]
+            user_instance.save()
+            account = serializer2.save(user=user)
+            return Response({
+                'response': "User Info Updated",
+                'email': user.email,
+                'username': user.username,
+                'gender': account.gender,
+                'phone_no': account.phone_no
+            })
+        else:
+            return Response(serializer.errors)
 
 
 @api_view(['POST'])

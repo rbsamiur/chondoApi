@@ -26,7 +26,7 @@ class LoginSerializer(ModelSerializer):
 class UserInfoSerializer(ModelSerializer):
     class Meta:
         model = User
-        fields = ('id', 'first_name', 'last_name', 'email','username','last_login')
+        fields = ('id', 'first_name', 'last_name', 'email', 'username', 'last_login')
 
 
 class RegistrationSerializers(ModelSerializer):
@@ -58,3 +58,10 @@ class RegistrationSerializers(ModelSerializer):
         user.save()
 
         return user
+
+
+class GoogleUserUpdateSerializers(ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['username', 'last_name', 'first_name']
+
