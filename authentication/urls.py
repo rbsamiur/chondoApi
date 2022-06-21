@@ -15,5 +15,6 @@ urlpatterns = [
     path('token/verify/', tokenVerify),
     path('test', test_view),
     path('google/login',GoogleView),
+    path('google/info/update',GoogleUserUpdateView),
 
 ]
