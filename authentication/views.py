@@ -35,6 +35,7 @@ def GoogleView(request):
     try:
         user = User.objects.get(email=data['email'])
         response['username'] = user.username
+        response['last_login'] = user.last_login
         response['new_user'] = False
         response['name'] = data['name']
     except User.DoesNotExist:
@@ -44,8 +45,9 @@ def GoogleView(request):
         # provider random default password
         user.password = make_password(BaseUserManager().make_random_password())
         user.save()
+        response['last_login'] = user.last_login
         response['name'] = data['name']
-        response['username'] = ""
+        response['username'] = user.username
         response['new_user'] = True
 
     token = RefreshToken.for_user(user)  # generate token without username & password
