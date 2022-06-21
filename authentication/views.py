@@ -34,7 +34,7 @@ def GoogleView(request):
     response = {}
     try:
         user = User.objects.get(email=data['email'])
-        response['username']=user.username
+        response['username'] = user.username
         response['new_user'] = False
         response['name'] = data['name']
     except User.DoesNotExist:
@@ -61,7 +61,6 @@ def GoogleView(request):
 def GoogleUserUpdateView(request):
     if request.method == 'POST':
         user = request.user
-        user_instance = User.objects.filter(user)
 
         serializer = GoogleUserUpdateSerializers(data=request.data)
 
@@ -73,15 +72,12 @@ def GoogleUserUpdateView(request):
         serializer2 = AccountSerializer(data=account_data)
 
         if serializer.is_valid() and serializer2.is_valid():
-            user_instance["username"] = serializer["username"]
-            user_instance["first_name"] = serializer["first_name"]
-            user_instance["last_name"] = serializer["last_name"]
-            user_instance.save()
-            account = serializer2.save(user=user)
+            user_instance = serializer.update(request.user, serializer.validated_data)
+            account = serializer2.save(user=request.user)
             return Response({
                 'response': "User Info Updated",
-                'email': user.email,
-                'username': user.username,
+                'email': user_instance.email,
+                'username': user_instance.username,
                 'gender': account.gender,
                 'phone_no': account.phone_no
             })
