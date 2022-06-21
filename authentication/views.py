@@ -72,8 +72,8 @@ def GoogleUserUpdateView(request):
         serializer2 = AccountSerializer(data=account_data)
 
         if serializer.is_valid() and serializer2.is_valid():
-            user_instance = serializer.update(request.user, serializer.validated_data)
-            account = serializer2.save(user=request.user)
+            user_instance = serializer.update(user, serializer.validated_data)
+            account = serializer2.save(user=user)
             return Response({
                 'response': "User Info Updated",
                 'email': user_instance.email,
