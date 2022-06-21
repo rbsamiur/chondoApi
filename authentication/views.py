@@ -102,6 +102,19 @@ def UserInfoView(request):
 
 
 @api_view(['POST'])
+def CheckUserNameView(request):
+    response = {}
+    print(request)
+    try:
+        user = User.objects.get(username=request.data[
+            "username"
+        ])
+        response["msg"] = "Username not available"
+    except User.DoesNotExist:
+        response["msg"] = "Username Valid"
+
+    return Response(response)
+@api_view(['POST'])
 @permission_classes([])
 def tokenObtainPair(request):
     try:
