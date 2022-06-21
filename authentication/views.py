@@ -16,7 +16,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.hashers import make_password
 from rest_framework.utils import json
-
+from .models import *
 import requests as httpRequest
 
 
@@ -85,6 +85,20 @@ def GoogleUserUpdateView(request):
             })
         else:
             return Response(serializer.errors)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def UserInfoView(request):
+    user_instance = User.objects.get(username=request.user)
+    serializer = UserInfoSerializer(user_instance)
+    account_data = Account.objects.get(user=user_instance)
+    serializer2 = AccountSerializer(account_data)
+    print(serializer2.data)
+    return Response({
+        "user_info": serializer.data,
+        "account_info": serializer2.data
+    })
 
 
 @api_view(['POST'])
