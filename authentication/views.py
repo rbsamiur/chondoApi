@@ -38,6 +38,7 @@ def GoogleView(request):
         response['last_login'] = user.last_login
         response['new_user'] = False
         response['name'] = data['name']
+        response['img']= data['picture']
     except User.DoesNotExist:
 
         user = User()
@@ -50,6 +51,7 @@ def GoogleView(request):
         response['last_login'] = user.last_login
         response['name'] = data['name']
         response['username'] = user.username
+        response['img'] = data['picture']
         response['new_user'] = True
 
     token = RefreshToken.for_user(user)  # generate token without username & password
