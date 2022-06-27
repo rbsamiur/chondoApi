@@ -16,7 +16,9 @@ urlpatterns = [
     path('user/info', UserInfoView),
     path('check/username', CheckUserNameView),
     path('test', test_view),
-    path('google/login',GoogleView),
-    path('google/info/update',GoogleUserUpdateView),
+    path('google/login', GoogleView),
+    path('facebook/login', FacebookView),
+    path('google/info/update', GoogleUserUpdateView),
+    path('facebook/info/update', FacebookUpdateView),
 
 ]

@@ -45,6 +45,8 @@ def GoogleView(request):
         # provider random default password
         user.password = make_password(BaseUserManager().make_random_password())
         user.save()
+        user.username = user.id
+        user.save()
         response['last_login'] = user.last_login
         response['name'] = data['name']
         response['username'] = user.username
@@ -59,8 +61,72 @@ def GoogleView(request):
 
 
 @api_view(['POST'])
+def FacebookView(request):
+    data = {}
+    data["email"] = request.data.get("email")
+    data["name"] = request.data.get("name")
+    # create user if not exist
+    response = {}
+    try:
+        user = User.objects.get(email=data['email'])
+        response['username'] = user.username
+        response['last_login'] = user.last_login
+        response['new_user'] = False
+        response['name'] = data['name']
+    except User.DoesNotExist:
+
+        user = User()
+        user.email = data['email']
+        # provider random default password
+        user.password = make_password(BaseUserManager().make_random_password())
+        user.save()
+        user.username = user.id
+        user.save()
+        response['last_login'] = user.last_login
+        response['name'] = data["name"]
+        response['username'] = user.username
+        response['new_user'] = True
+
+    token = RefreshToken.for_user(user)  # generate token without username & password
+
+    response['email'] = user.email
+    response['access_token'] = str(token.access_token)
+    response['refresh_token'] = str(token)
+    return Response(response)
+
+
+@api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def GoogleUserUpdateView(request):
+    if request.method == 'POST':
+        user = request.user
+
+        serializer = GoogleUserUpdateSerializers(data=request.data)
+
+        account_data = {
+            'gender': request.data['gender'],
+            'phone_no': request.data['phone_no']
+        }
+
+        serializer2 = AccountSerializer(data=account_data)
+
+        if serializer.is_valid() and serializer2.is_valid():
+            user_instance = serializer.update(user, serializer.validated_data)
+            account = serializer2.save(user=user)
+            return Response({
+                'response': "User Info Updated",
+                'email': user_instance.email,
+                'username': user_instance.username,
+                'gender': account.gender,
+                'phone_no': account.phone_no
+            })
+        else:
+            return Response(serializer.errors)
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def FacebookUpdateView(request):
     if request.method == 'POST':
         user = request.user
 
@@ -114,6 +180,8 @@ def CheckUserNameView(request):
         response["msg"] = "Username Valid"
 
     return Response(response)
+
+
 @api_view(['POST'])
 @permission_classes([])
 def tokenObtainPair(request):
