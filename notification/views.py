@@ -5,8 +5,8 @@ from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth.models import User
 from rest_framework import generics
 # Create your views here.
-from .models import Notification
-from .serializer import NotificationSerializers
+from .models import *
+from .serializer import *
 from authentication.decorator import permission_required
 
 
@@ -14,8 +14,31 @@ from authentication.decorator import permission_required
 @permission_classes([IsAuthenticated])
 def getNotifications(request):
     notifications = Notification.objects.all()
-    serializer = NotificationSerializers(notifications, many=True)
+    serializer = UserNotificationSerializer(notifications, many=True)
+    print(serializer.data)
     return Response(serializer.data)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def notificationReadToggle(request, pk):
+    try:
+        notification = UserRead.objects.get(notification=pk)
+
+        notification.read = not notification.read
+
+        notification.save()
+        return Response(UserReadSerializers(notification, context={'request': request}).data)
+
+    except UserRead.DoesNotExist:
+        user_read_instance = {}
+        user_read_instance["user"] = User.objects.get(username=request.user).id
+        user_read_instance["notification"] = pk
+        user_read_instance["read"] = True
+        serializer = UserReadSerializers(data=user_read_instance)
+        if serializer.is_valid():
+            serializer.save()
+        return Response(serializer.data)
 
 
 @api_view(['POST'])
