@@ -13,7 +13,7 @@ class NotificationSerializers(ModelSerializer):
 class UserReadSerializers(ModelSerializer):
     class Meta:
         model = UserRead
-        fields = ["user","notification","read","id"]
+        fields = ["user", "notification", "read", "id"]
 
 
 class UserNotificationSerializer(ModelSerializer):
@@ -21,7 +21,10 @@ class UserNotificationSerializer(ModelSerializer):
 
     def get_user_read(self, obj):
         try:
-            read = UserRead.objects.get(notification=obj.id).read
+            user_id = self.context.get("user")
+            print(user_id)
+            read = UserRead.objects.get(notification=obj.id, user=user_id).read
+            print(read)
             return read
         except UserRead.DoesNotExist:
             return False
