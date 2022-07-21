@@ -13,7 +13,6 @@ from authentication.decorator import permission_required
 @permission_classes([IsAuthenticated])
 def getNotifications(request):
     user = request.user
-
     notifications = Notification.objects.all()
     serializer = UserNotificationSerializer(notifications, many=True, context={'user': user.id})
     return Response(serializer.data)
@@ -25,11 +24,8 @@ def notificationReadToggle(request, pk):
     try:
         user = request.user
         notification = UserRead.objects.get(user=user, notification=pk)
-
         # notification = User.UserRead.objects.get(notification=pk)
-
         notification.read = not notification.read
-
         notification.save()
         return Response(UserReadSerializers(notification, context={'request': request}).data)
 
