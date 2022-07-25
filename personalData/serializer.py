@@ -6,5 +6,11 @@ from .models import PersonalData
 
 class PersonalDataSerializers(ModelSerializer):
     class Meta:
-        model=PersonalData
-        fields='__all__'
+        model = PersonalData
+        fields = '__all__'
+
+
+class AbsoluteDataSerializers(ModelSerializer):
+    class Meta:
+        model = PersonalData
+        fields = '__all__'

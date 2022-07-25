@@ -7,4 +7,8 @@ urlpatterns=[
     path('personaldata/create',  views.createPersonalData),
     path('personaldata/update', views.updatePersonalData),
     path('personaldata/delete', views.deletePersonalData),
+
+    path('absolute/data', views.getAbsoulteData),
+    path('absolute/create', views.createAbsoluteData),
+    path('absolute/update', views.updateAbsoluteData),
 ]

@@ -5,8 +5,8 @@ from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth.models import User
 from rest_framework import generics
 # Create your views here.
-from .models import PersonalData
-from .serializer import PersonalDataSerializers
+from .models import *
+from .serializer import *
 import datetime
 
 
@@ -65,3 +65,36 @@ def deletePersonalData(request):
     stored_data = PersonalData.objects.get(user=user)
     stored_data.delete()
     return Response({'msg': "Item Deleted Successfully!"})
+
+
+@permission_classes([IsAuthenticated])
+def getAbsoulteData(request):
+    user = request.user
+    stored_data = user.absolutepersonaldata_set.all()
+    serializer = AbsoluteDataSerializers(stored_data)
+    return Response(serializer.data)
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def createAbsoluteData(request):
+    user = request.user
+    if AbsolutePersonalData.objects.filter(user=user).exists():
+        return Response({'msg': "Absolute Personal Data already entered. Please use update for change"})
+    else:
+        serializer = AbsoluteDataSerializers(data=request.data)
+        if serializer.is_valid():
+            serializer.save(user=user)
+        return Response(serializer.data)
+
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def updateAbsoluteData(request):
+    user = request.user
+    stored_data = AbsolutePersonalData.objects.get(user=user)
+    print(stored_data)
+    serializer = AbsolutePersonalData(instance=stored_data, data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+    return Response(serializer.data)
