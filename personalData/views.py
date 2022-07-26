@@ -66,7 +66,7 @@ def deletePersonalData(request):
     stored_data.delete()
     return Response({'msg': "Item Deleted Successfully!"})
 
-
+@api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def getAbsoulteData(request):
     user = request.user
