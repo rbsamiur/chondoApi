@@ -70,8 +70,8 @@ def deletePersonalData(request):
 @permission_classes([IsAuthenticated])
 def getAbsoulteData(request):
     user = request.user
-    stored_data = AbsolutePersonalData.objects.get(user=user)
-    serializer = AbsoluteDataSerializers(stored_data)
+    stored_data = user.absolutepersonaldata_set.all()
+    serializer = AbsoluteDataSerializers(stored_data, many=True)
     return Response(serializer.data)
 
 
