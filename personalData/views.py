@@ -94,8 +94,8 @@ def createAbsoluteData(request):
 def updateAbsoluteData(request):
     user = request.user
     stored_data = AbsolutePersonalData.objects.get(user=user)
-    print(stored_data)
-    serializer = AbsolutePersonalData(instance=stored_data, data=request.data)
+
+    serializer = AbsoluteDataSerializers(instance=stored_data, data=request.data)
     if serializer.is_valid():
         serializer.save()
     return Response(serializer.data)
